@@ -123,9 +123,16 @@ class SteamParser:
             )
             self.friends_list.append(new_friend)
 
-    def generate_report(self):
-        # генерация отчета
-        report = {
+class Report:
+    def __init__(self, badges_list: list, users_list: list, friends_list: list):
+
+        self.badges_list = badges_list
+        self.users_list = users_list
+        self.friends_list = friends_list
+
+    def generate(self) -> dict:
+
+        return {
             "total_badges": len(self.badges_list),
             "total_users": len(self.users_list),
             "total_friends": len(self.friends_list),
@@ -133,22 +140,17 @@ class SteamParser:
             "users": [str(user) for user in self.users_list],
             "friends": [str(friend) for friend in self.friends_list],
         }
-        return report
-
-
-
 if __name__ == "__main__":
     parser = SteamParser()
 
-
+    # Парсинг данных
     parser.parse_badges("https://steamcommunity.com/profiles/76561198807849076/badges/")
-
-
     parser.parse_user(76561198807849076, "https://steamcommunity.com/profiles/76561198807849076")
-
-
     parser.parse_friends(76561198807849076, "https://steamcommunity.com/profiles/76561198807849076/friends/")
 
+    # Создание отчета
+    report = Report(parser.badges_list, parser.users_list, parser.friends_list)
+    report_dict = report.generate()
 
-    report = parser.generate_report()
-    print(report)
+    # Вывод отчета
+    print(report_dict)
